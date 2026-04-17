@@ -7,9 +7,11 @@ app.secret_key = "secret"
 users = []
 tickets = []
 
-# Home page
+# Home page (PROTECTED)
 @app.route('/')
 def home():
+    if 'user_id' not in session:
+        return redirect('/login')
     return render_template('index.html')
 
 # Signup
@@ -33,7 +35,14 @@ def login():
             if user['username'] == request.form['username'] and user['password'] == request.form['password']:
                 session['user_id'] = user['id']
                 return redirect('/')
+        return "Invalid username or password"   # helpful debug
     return render_template('login.html')
+
+# Logout (NEW)
+@app.route('/logout')
+def logout():
+    session.pop('user_id', None)
+    return redirect('/login')
 
 # Add Ticket
 @app.route('/add', methods=['POST'])
@@ -60,4 +69,6 @@ def view_tickets():
 
     return render_template('tickets.html', tickets=user_tickets)
 
-app.run(debug=True)
+# IMPORTANT for Render
+if __name__ == "__main__":
+    app.run(debug=True)
