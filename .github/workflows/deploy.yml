@@ -1,4 +1,4 @@
-name: Deploy IT Ticket Tool
+name: TICKET-PROJECT
 
 on:
   push:
